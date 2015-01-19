@@ -31,3 +31,30 @@ td.disp {
 	border: black 2px solid;
 }
 
+button {
+	border-radius: 20%;
+	border: 2px solid black;
+	width: 90%;
+	height: 85%;
+	font-size: 50%;
+}
+
+button:focus {
+    outline: none;
+    border: 2px dotted white;
+}
+
+button.op {
+	background-color: purple;
+}
+
+button.op:hover {
+	background-color: red;
+}
+
+button.num {
+	background-color: blue;
+}
+button.num:hover {
+	background-color: pink;
+}
