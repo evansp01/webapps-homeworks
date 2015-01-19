@@ -18,3 +18,16 @@ table.calculator {
 	height: 70%;
 	border-radius: 4%;
 }
+
+td {
+	height: 20%;
+	font-size: 450%
+}
+td.disp {
+	text-align: right;
+	padding: 2%;
+	color: black;
+	background-color: pink;
+	border: black 2px solid;
+}
+
