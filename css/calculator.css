@@ -36,7 +36,12 @@ button {
 	border: 2px solid black;
 	width: 90%;
 	height: 85%;
+	font-color: black;
 	font-size: 50%;
+}
+
+button::-moz-focus-inner {
+  border: 0;
 }
 
 button:focus {
