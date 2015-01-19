@@ -1,66 +1,58 @@
 html {
-	height: 100%;
+    height: 100%;
 }
 body {
-	background-color: lightgray;
-	width: 100%;
-	height: 100%;
+    background-color: lightgray;
+    width: 100%;
+    height: 100%;
 }
 table.calculator {
-	text-align: center;
-	margin-left: auto;
-	margin-right: auto;
-	padding: 3%;
-	color: gray;
-	background-color: lavender;
-	border: black 2px solid;
-	width: 50%;
-	height: 70%;
-	border-radius: 4%;
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 3%;
+    color: gray;
+    background-color: lavender;
+    border: black 2px solid;
+    width: 50%;
+    height: 70%;
+    border-radius: 4%;
 }
-
 td {
-	height: 20%;
-	font-size: 450%
+    height: 20%;
+    font-size: 450%
 }
 td.disp {
-	text-align: right;
-	padding: 2%;
-	color: black;
-	background-color: azure;
-	border: black 2px solid;
+    text-align: right;
+    padding: 2%;
+    color: black;
+    background-color: azure;
+    border: black 2px solid;
 }
-
 button {
-	border-radius: 20%;
-	border: 2px solid black;
-	width: 90%;
-	height: 85%;
-	font-color: black;
-	font-size: 50%;
+    border-radius: 20%;
+    border: 2px solid black;
+    width: 90%;
+    height: 85%;
+    font-color: black;
+    font-size: 50%;
 }
-
 button::-moz-focus-inner {
-  border: 0;
+    border: 0;
 }
-
 button:focus {
     outline: none;
     border: 2px dotted white;
 }
-
 button.op {
-	background-color: lightslategray;
+    background-color: lightslategray;
 }
-
 button.num {
-	background-color: lightsteelblue;
+    background-color: lightsteelblue;
 }
-
 button.op:hover {
-	background-color: darkslategray;
+    background-color: darkslategray;
 }
-
 button.num:hover {
-	background-color: steelblue;
+    background-color: steelblue;
 }
