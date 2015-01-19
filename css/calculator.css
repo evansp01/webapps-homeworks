@@ -2,7 +2,7 @@ html {
 	height: 100%;
 }
 body {
-	background-color: #d0e4fe;
+	background-color: lightgray;
 	width: 100%;
 	height: 100%;
 }
@@ -12,7 +12,7 @@ table.calculator {
 	margin-right: auto;
 	padding: 3%;
 	color: gray;
-	background-color: gray;
+	background-color: lavender;
 	border: black 2px solid;
 	width: 50%;
 	height: 70%;
@@ -27,7 +27,7 @@ td.disp {
 	text-align: right;
 	padding: 2%;
 	color: black;
-	background-color: pink;
+	background-color: azure;
 	border: black 2px solid;
 }
 
@@ -45,16 +45,17 @@ button:focus {
 }
 
 button.op {
-	background-color: purple;
-}
-
-button.op:hover {
-	background-color: red;
+	background-color: lightslategray;
 }
 
 button.num {
-	background-color: blue;
+	background-color: lightsteelblue;
 }
+
+button.op:hover {
+	background-color: darkslategray;
+}
+
 button.num:hover {
-	background-color: pink;
+	background-color: steelblue;
 }
