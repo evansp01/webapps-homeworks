@@ -45,7 +45,7 @@ button {
     border: 2px solid black;
     width: 90%;
     height: 90%;
-    font-color: black;
+    color: black;
     font-size: 50%;
 }
 button::-moz-focus-inner {
