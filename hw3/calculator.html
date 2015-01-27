@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Calculator</title>
+        <meta http-equiv="Content-Type" content="text/html;charset=utf-8" >
+        <link rel="stylesheet" type="text/css" href="css/calculator.css">
+        <script src="scripts/click.js"></script>
+    </head>
+    <body>
+    	<div id="calculatorbox">
+	        <table class="calculator">
+	            <tr>
+	                <td colspan="4"><div id="display" class="disp"> 0 </div></td>
+	            </tr>
+	            <tr>
+	                <td><button type="button" class="num" onclick="enterNum(7)" > 7 </button></td>
+	                <td><button type="button" class="num" onclick="enterNum(8)" > 8 </button></td>
+	                <td><button type="button" class="num" onclick="enterNum(9)" > 9 </button></td>
+	                <td><button type="button" class="op" onclick="enterOp('+')" > &plus; </button></td>
+	            </tr>
+	            <tr>
+	                <td><button type="button" class="num" onclick="enterNum(4)" > 4 </button></td>
+	                <td><button type="button" class="num" onclick="enterNum(5)" > 5 </button></td>
+	                <td><button type="button" class="num" onclick="enterNum(6)" > 6 </button></td>
+	                <td><button type="button" class="op" onclick="enterOp('-')"> &minus; </button></td>
+	            </tr>
+	            <tr>
+	                <td><button type="button" class="num" onclick="enterNum(1)"> 1 </button></td>
+	                <td><button type="button" class="num" onclick="enterNum(2)"> 2 </button></td>
+	                <td><button type="button" class="num" onclick="enterNum(3)"> 3 </button></td>
+	                <td><button type="button" class="op" onclick="enterOp('*')"> &times; </button></td>
+	            </tr>
+	            <tr>
+	                <td> </td>
+	                <td><button type="button" class="num" onclick="enterNum(0)"> 0 </button></td>
+	                <td><button type="button" class="op" onclick="enterOp('=')"> &equals; </button></td>
+	                <td><button type="button" class="op" onclick="enterOp('/')"> &divide; </button></td>
+	            </tr>
+	        </table>
+        </div>
+    </body>
+</html>
