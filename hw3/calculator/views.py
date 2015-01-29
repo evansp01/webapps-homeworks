@@ -1,9 +1,10 @@
 from django.shortcuts import render
 import json
 
-NUMBER='num'
-OPERATION='op'
-STATE='state'
+NUMBER = 'num'
+OPERATION = 'op'
+STATE = 'state'
+
 
 def applyOp(v1, v2, op):
     v1 = int(v1)
@@ -21,8 +22,10 @@ def applyOp(v1, v2, op):
         return v2
     return 0
 
+
 def appendNum(num1, num2):
-    return int(num1)*10+int(num2)
+    return int(num1) * 10 + int(num2)
+
 
 def enterNum(num, state):
     if state["etype"] == OPERATION:
@@ -32,6 +35,7 @@ def enterNum(num, state):
         state["cnum"] = appendNum(state["cnum"], num)
         state["display"] = state["cnum"]
     state["etype"] = NUMBER
+
 
 def enterOp(op, state):
     if state["op"] == '/' and state["cnum"] == 0:
@@ -45,17 +49,20 @@ def enterOp(op, state):
         state["display"] = state["lnum"]
     state["etype"] = OPERATION
 
+
 def init_state():
     return {
-        "lnum" : 0,
-        "cnum" : 0,
-        "op" : "+",
-        "etype" : NUMBER,
-        "display" : 0
+        "lnum": 0,
+        "cnum": 0,
+        "op": "+",
+        "etype": NUMBER,
+        "display": 0
     }
+
 
 def state_to_string(state):
     return json.dumps(state)
+
 
 def string_to_state(state_string):
     try:
@@ -64,19 +71,18 @@ def string_to_state(state_string):
         return init_state()
 
 
-
 def calculator(request):
     state = None
-    #get the state back
+    # get the state back
     if STATE in request.POST:
         state = string_to_state(request.POST[STATE])
     else:
         state = init_state()
-    #after retrieving state, do whatever
+    # after retrieving state, do whatever
     if NUMBER in request.POST:
         enterNum(request.POST[NUMBER], state)
     elif OPERATION in request.POST:
         enterOp(request.POST[OPERATION], state)
 
-    return render(request, 'calculator/calculator.html', 
-                  {"value": state["display"], "state":state_to_string(state)})
+    return render(request, 'calculator/calculator.html',
+                  {"value": state["display"], "state": state_to_string(state)})
