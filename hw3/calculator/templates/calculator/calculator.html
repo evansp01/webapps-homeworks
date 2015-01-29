@@ -7,9 +7,9 @@
 	</head>
 	<body>
 		<div id="calculatorbox">
-			<table class="calculator">
-				<form action="calculator" method="POST">{% csrf_token %}
-					<input type="hidden" name="state" value="{{ state }}">
+			<form action="." method="POST">{% csrf_token %}
+				<input type="hidden" name="state" value="{{ state }}">
+				<table class="calculator">
 					<tr>
 						<td colspan="4"><div id="display" class="disp"> {{ value }} </div></td>
 					</tr>
@@ -37,8 +37,8 @@
 						<td><button type="submit" class="op" name="op" value="="> &equals; </button></td>
 						<td><button type="submit" class="op" name="op" value="/"> &divide; </button></td>
 					</tr>
-				</form>
-			</table>
+				</table>
+			</form>
 		</div>
 	</body>
 </html>
