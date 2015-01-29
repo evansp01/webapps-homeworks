@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Calculator</title>
+        <meta http-equiv="Content-Type" content="text/html;charset=utf-8" >
+        <link rel="stylesheet" type="text/css" href="../../static/calculator/css/calculator.css">
+    </head>
+    <body>
+    	<div id="calculatorbox">
+	        <table class="calculator">
+	        <form action="calculator" method="GET">
+	            <tr>
+	                <td colspan="4"><div id="display" class="disp"> {{value}} </div></td>
+	            </tr>
+	            <tr>
+	                <td><button type="submit" class="num" name="num" value="7"> 7 </button></td>
+	                <td><button type="submit" class="num" name="num" value="8"> 8 </button></td>
+	                <td><button type="submit" class="num" name="num" value="9"> 9 </button></td>
+	                <td><button type="submit" class="op" name="op" value="+"> &plus; </button></td>
+	            </tr>
+	            <tr>
+	                <td><button type="submit" class="num" name="num" value="4"> 4 </button></td>
+	                <td><button type="submit" class="num" name="num" value="5"> 5 </button></td>
+	                <td><button type="submit" class="num" name="num" value="6"> 6 </button></td>
+	                <td><button type="submit" class="op" name="op" value="-"> &minus; </button></td>
+	            </tr>
+	            <tr>
+	                <td><button type="submit" class="num" name="num" value="1"> 1 </button></td>
+	                <td><button type="submit" class="num" name="num" value="2"> 2 </button></td>
+	                <td><button type="submit" class="num" name="num" value="3"> 3 </button></td>
+	                <td><button type="submit" class="op" name="op" value="*"> &times; </button></td>
+	            </tr>
+	            <tr>
+	                <td> </td>
+	                <td><button type="submit" class="num" name="num" value="0"> 0 </button></td>
+	                <td><button type="submit" class="op" name="op" value="="> &equals; </button></td>
+	                <td><button type="submit" class="op" name="op" value="/"> &divide; </button></td>
+	            </tr>
+	        </form>
+	        </table>
+        </div>
+    </body>
+</html>
