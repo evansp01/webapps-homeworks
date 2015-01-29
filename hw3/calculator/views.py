@@ -1,21 +1,25 @@
 from django.shortcuts import render
+import json
 
 NUMBER='num'
 OPERATION='op'
+STATE='state'
 
 def applyOp(v1, v2, op):
-    v1 = int(v1);
-    v2 = int(v2);
-    operations = {
-        "+": (v1 + v2),
-        "-": (v1 - v2),
-        "*": (v1 * v2),
-        "/": (v1 // v2),
-        "=": v2
-    }
-    print v1, op, v2, " ", operations[str(op)]
-    return operations[str(op)]
-
+    v1 = int(v1)
+    v2 = int(v2)
+    op = str(op)
+    if op == "+":
+        return (v1 + v2)
+    if op == "-":
+        return (v1 - v2)
+    if op == "*":
+        return (v1 * v2)
+    if op == "/":
+        return (v1 // v2)
+    if op == "=":
+        return v2
+    return 0
 
 def appendNum(num1, num2):
     return int(num1)*10+int(num2)
@@ -41,27 +45,38 @@ def enterOp(op, state):
         state["display"] = state["lnum"]
     state["etype"] = OPERATION
 
-def assert_state(state, reset=False):
-    items_required = ["lnum","cnum","op","etype","display"]
-    passed = True
-    for req in items_required:
-        if req not in state:
-            passed = False
-    if not passed or reset:
-        state["lnum"] = 0
-        state["cnum"] = 0
-        state["op"] = "+"
-        state["etype"] = NUMBER
-        state["display"] = 0
+def init_state():
+    return {
+        "lnum" : 0,
+        "cnum" : 0,
+        "op" : "+",
+        "etype" : NUMBER,
+        "display" : 0
+    }
+
+def state_to_string(state):
+    return json.dumps(state)
+
+def string_to_state(state_string):
+    try:
+        return json.loads(state_string)
+    except:
+        return init_state()
+
+
 
 def calculator(request):
-    assert_state(request.session)
-    if NUMBER in request.GET:
-        enterNum(request.GET[NUMBER], request.session)
-    elif OPERATION in request.GET:
-       enterOp(request.GET[OPERATION], request.session)
+    state = None
+    #get the state back
+    if STATE in request.POST:
+        state = string_to_state(request.POST[STATE])
     else:
-        assert_state(request.session, reset=True)
-    print(request.session["display"])
+        state = init_state()
+    #after retrieving state, do whatever
+    if NUMBER in request.POST:
+        enterNum(request.POST[NUMBER], state)
+    elif OPERATION in request.POST:
+        enterOp(request.POST[OPERATION], state)
+
     return render(request, 'calculator/calculator.html', 
-                  {"value": int(request.session["display"])})
+                  {"value": state["display"], "state":state_to_string(state)})
