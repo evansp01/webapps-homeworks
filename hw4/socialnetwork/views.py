@@ -82,7 +82,7 @@ def add_item(request):
 @transaction.atomic
 def delete_item(request, username):
     errors = []
-    if not ['item_id'] in request.POST:
+    if not 'item_id' in request.POST:
         errors.append("You must specify the item to delete")
     else:
         try: # Deletes item if the logged-in user has an item matching the id
