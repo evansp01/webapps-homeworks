@@ -1,0 +1,60 @@
+{% extends "socialnetwork/feed_template.html" %}
+
+{% block title %}
+  The Social Network
+{% endblock %}
+
+{% block nav %}
+<a class="blog-nav-item active" href="/">The Social Network</a>
+<a class="blog-nav-item" href="/following">Following</a>
+<a class="blog-nav-item" href="/profile/{{user.username}}">Profile</a>
+<a class="blog-nav-item" href="/logout">Logout</a>
+{% endblock %}
+
+{% block page_header %}
+  <h` class="blog-title">The Global Feed</h1>
+  <p class="lead blog-description">
+    Learn about the mundane activites of strangers, or tell them things!
+  </p>
+{% endblock %}
+
+{% block form %}
+  {% for error in errors %}
+    <p style="color:red">
+    {{error}}
+    </p>
+  {% endfor %}
+  <!-- Here is the submit form -->
+  <form action="/" method="post"> {% csrf_token %}
+    <input type="hidden" name="action" value="add">
+      <div class="form-group">
+        <textarea class="form-control" rows="2" id="iteminput" name="item"></textarea>
+      </div>
+    <button type="submit" class="btn btn-default">Submit</button>
+  </form>
+  <br>
+{% endblock %}
+
+{% block item %}
+  <li>
+    {{item}}
+  </li>
+{% endblock %}
+
+{% block item_by %}
+  &mdash;Posted by  
+  <a href="/profile/{{item.user.username}}">
+    {{item.user.username}}
+  </a> on {{item.date}}
+{% endblock %}
+
+{% block sidebar %}
+{% endblock %}
+
+{% comment %}
+
+{% block login_info %}
+{% endblock %}
+
+{% endcomment %}
+

@@ -1,0 +1,56 @@
+{% extends "socialnetwork/feed_template.html" %}
+
+{% block title %}
+  Your Following Feed
+{% endblock %}
+
+{% block nav %}
+<a class="blog-nav-item" href="/">The Social Network</a>
+<a class="blog-nav-item active" href="/following">Following</a>
+<a class="blog-nav-item" href="/profile/{{user.username}}">Profile</a>
+<a class="blog-nav-item" href="/logout">Logout</a>
+{% endblock %}
+
+{% block page_header %}
+  <h` class="blog-title">
+    Following Feed
+  </h1>
+  <p class="lead blog-description">
+    Learn about the mundane activites of people you may know!
+  </p>
+{% endblock %}
+
+{% block form %}
+{% endblock %}
+
+{% block item %}
+  {% if viewing == user %}
+    <form method="POST", action="/profile/{{user}}">{% csrf_token %}
+      <input type="hidden" name="action" value="delete">
+      <input type="hidden" name="item_id" value="{{item.id}}">
+        <li>
+        {{item}} <small><input type="submit" value="(delete)" class="btn-link"/></small> 
+        </li>   
+    </form>     
+  {% else %}
+    <li>
+      {{item}} 
+    </li> 
+  {% endif %}   
+{% endblock %}
+
+{% block item_by %}
+  &mdash;Posted on {{item.date}} 
+{% endblock %}
+
+{% block sidebar %}
+  <div class="sidebar-module sidebar-module-inset">
+  </div>
+{% endblock %}
+
+{% comment %}
+{% block login_info %}
+{% endblock %}
+
+{% endcomment %}
+
