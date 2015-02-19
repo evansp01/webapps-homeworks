@@ -4,7 +4,7 @@ import os
 # User class for built-in authentication module
 from django.contrib.auth.models import User
 
-class Item(models.Model):
+class Post(models.Model):
     text = models.CharField(max_length=140)
     user = models.ForeignKey(User)
     date = models.DateTimeField(auto_now_add=True)

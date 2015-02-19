@@ -4,10 +4,10 @@ from socialnetwork.models import *
 
 MAX_IMAGE_SIZE = 4194304
 
-class ItemForm(forms.ModelForm):
+class PostForm(forms.ModelForm):
 
     class Meta:
-        model = Item
+        model = Post
         fields = ['text']
 
 

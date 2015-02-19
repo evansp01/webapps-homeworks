@@ -21,12 +21,12 @@ from socialnetwork.forms import *
 
 @login_required
 def render_global(request, form):
-    items = Item.objects.all().order_by('-date')
+    items = Post.objects.all().order_by('-date')
     context = {}
     context['items'] = items
     context['user'] = request.user
-    context['global_posts'] = len(Item.objects.all())
-    context['user_posts'] = len(Item.objects.filter(user=request.user))
+    context['global_posts'] = len(Post.objects.all())
+    context['user_posts'] = len(Post.objects.filter(user=request.user))
     context['form'] = form
     return render(request, 'socialnetwork/home_feed.html', context)
 
@@ -37,15 +37,15 @@ def render_following(request):
     # because who needs to know how to query the database properly
     following = request.user.userprofile.follows.all()
     for profile in following:
-        items.extend(Item.objects.filter(user=profile.userkey))
+        items.extend(Post.objects.filter(user=profile.userkey))
     items.sort(key=lambda x: x.date)
     items.reverse()
     context = {}
     context['items'] = items
     context['following'] = following
     context['user'] = request.user
-    context['global_posts'] = len(Item.objects.all())
-    context['user_posts'] = len(Item.objects.filter(user=request.user))
+    context['global_posts'] = len(Post.objects.all())
+    context['user_posts'] = len(Post.objects.filter(user=request.user))
     return render(request, 'socialnetwork/following_feed.html', context)
 
 
@@ -59,15 +59,15 @@ def home(request):
     if request.POST:
         return add_item(request)
     else:
-        return render_global(request, ItemForm())
+        return render_global(request, PostForm())
 
 
 @login_required
 @transaction.atomic
 def add_item(request):
-    form = ItemForm(request.POST)
+    form = PostForm(request.POST)
     if form.is_valid():
-        new_item = Item(text=form.cleaned_data['text'], user=request.user)
+        new_item = Post(text=form.cleaned_data['text'], user=request.user)
         new_item.save()
     return render_global(request, form)
 
