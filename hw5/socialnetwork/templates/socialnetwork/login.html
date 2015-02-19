@@ -1,9 +1,10 @@
 {% extends "socialnetwork/form_template.html" %}
+{% load static %}
 
 {% block title %}Login to The Social Network{% endblock %}
 
 {% block form %}
-<img class="profile-img" src="../../static/socialnetwork/img/homepage.jpg" alt="">
+<img class="profile-img" src="{% static 'socialnetwork/img/homepage.jpg' %}" alt="">
 <form class="form-signin" method="post" action="{% url 'django.contrib.auth.views.login' %}">{% csrf_token %}
   {% if form.errors %}
   <p class="errorlist">
