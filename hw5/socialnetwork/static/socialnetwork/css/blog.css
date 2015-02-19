@@ -180,3 +180,8 @@ body {
 {
     color: red;
 }
+
+.notugly
+{
+  word-wrap: break-word;
+}
