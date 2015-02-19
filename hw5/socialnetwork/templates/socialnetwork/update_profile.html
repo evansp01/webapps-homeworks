@@ -1,0 +1,46 @@
+{% extends "socialnetwork/feed_template.html" %}
+{% block title %}Edit Your Profile{% endblock %}
+{% block nav %}
+  <a class="blog-nav-item" href="{% url 'socialnetwork.views.home' %}">The Social Network</a>
+  <a class="blog-nav-item" href="{% url 'socialnetwork.views.following' %}">Following</a>
+  <a class="blog-nav-item" href="{% url 'socialnetwork.views.profile' user.username %}">Profile</a>
+  <a class="blog-nav-item active" href="{% url 'socialnetwork.views.edit' %}">Edit Profile</a>
+  <a class="blog-nav-item" href="{% url 'django.contrib.auth.views.logout_then_login' %}">Logout</a>
+{% endblock %}
+{% block page_header %}
+  <h` class="blog-title">
+  Edit Your Profile
+  </h1>
+  <p class="lead blog-description">
+  Construct a dark, mysterious, and intriguing internet persona!
+  </p>
+{% endblock %}
+{% block form %}
+  {{form.non_field_errors}}
+  <form enctype="multipart/form-data" class="form-signin" method="post">{% csrf_token %}
+    {{form.first.errors }}
+    {{form.first.label_tag}}
+    <input id="{{form.first.id_for_label}}" name="{{form.first.html_name}}" type="{{form.first.field.widget.input_type}}" class="form-control" placeholder="{{form.first.label}}" maxlength="{{form.first.field.max_length}}" value="{{form.first.value}}">
+    {{form.last.errors }}
+    {{form.last.label_tag}}
+    <input id="{{form.last.id_for_label}}" name="{{form.last.html_name}}" type="{{form.last.field.widget.input_type}}" class="form-control" placeholder="{{form.last.label}}" maxlength="{{form.last.field.max_length}}" value="{{form.last.value}}">
+    {{form.age.errors }}
+    {{form.age.label_tag}}
+    <input id="{{form.age.id_for_label}}" name="{{form.age.html_name}}" type="{{form.age.field.widget.input_type}}" class="form-control" placeholder="{{form.age.label}}" maxlength="{{form.age.field.max_length}}" value="{{form.age.value}}">
+    {{form.bio.errors }}
+    {{form.bio.label_tag}}
+    <textarea id="{{form.bio.id_for_label}}" name="{{form.bio.html_name}}" type="textarea" class="form-control" rows="4" placeholder="DDF lookin 4 LTR w/ DDF 420 friendly" maxlength="{{form.bio.field.max_length}}">{{form.bio.value}}</textarea>
+    {{form.image.errors }}
+    <label for="{{form.image.id_for_label}}">Image:</label>
+    
+    {% if user.userprofile.image %}
+      <a href="{% url 'socialnetwork.views.get_image' user.username %}">Current</a>
+      &nbsp;
+      <input id="{{form.imageupdate.id_for_label}}" name="{{form.imageupdate.html_name}}" type="checkbox" />
+      <label for="{{form.imageupdate.id_for_label}}">Clear</label><br>
+    {% endif %}
+    <input id="{{form.image.id_for_label}}" name="{{form.image.html_name}}" type="file" /> 
+    <br>
+    <input type="submit" class="btn btn-md" value="Update" />
+  </form>
+{% endblock %}
