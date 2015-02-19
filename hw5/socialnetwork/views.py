@@ -3,6 +3,7 @@ from django.core.exceptions import ObjectDoesNotExist
 
 # Decorator to use built-in authentication system
 from django.contrib.auth.decorators import login_required
+from django.http import HttpResponse, Http404
 
 # Used to create and manually log in a user
 from django.contrib.auth.models import User
@@ -10,23 +11,28 @@ from django.contrib.auth import login, authenticate
 from django.views.defaults import page_not_found
 import datetime
 import re
+import mimetypes, urllib
 
 # Django transaction system so we can use @transaction.atomic
 from django.db import transaction
 
 from socialnetwork.models import *
+from socialnetwork.forms import *
 
 CHARLIMIT = 160
 
+
 @login_required
-def render_global(request):
+def render_global(request, form):
     items = Item.objects.all().order_by('-date')
     context = {}
     context['items'] = items
     context['user'] = request.user
     context['global_posts'] = len(Item.objects.all())
-    context['user_posts'] = len(Item.objects.filter(user = request.user))
-    return render(request,'socialnetwork/home_feed.html',context)
+    context['user_posts'] = len(Item.objects.filter(user=request.user))
+    context['form'] = form
+    return render(request, 'socialnetwork/home_feed.html', context)
+
 
 @login_required
 def render_user(request, username):
@@ -39,141 +45,150 @@ def render_user(request, username):
     context['items'] = items
     context['user'] = request.user
     context['viewing'] = viewing
+    context['following'] = request.user.userprofile.follows.all()
     context['global_posts'] = len(Item.objects.all())
-    context['user_posts'] = len(Item.objects.filter(user = request.user))
-    context['viewing_posts'] = len(Item.objects.filter(user = viewing))
-    return render(request,'socialnetwork/profile_feed.html',context)
+    context['user_posts'] = len(Item.objects.filter(user=request.user))
+    context['viewing_posts'] = len(Item.objects.filter(user=viewing))
+    return render(request, 'socialnetwork/profile_feed.html', context)
+
 
 @login_required
 def render_following(request):
-    items = Item.objects.all().order_by('-date')
+    items = []
+    #because who needs to know how to query the database properly
+    following = request.user.userprofile.follows.all()
+    for profile in following:
+        items.extend(Item.objects.filter(user=profile.userkey))
+    items.sort(key= lambda x : x.date)
+    items.reverse()
     context = {}
     context['items'] = items
+    context['following'] = following
     context['user'] = request.user
     context['global_posts'] = len(Item.objects.all())
-    context['user_posts'] = len(Item.objects.filter(user = request.user))
-    return render(request,'socialnetwork/following_feed.html', context)
+    context['user_posts'] = len(Item.objects.filter(user=request.user))
+    return render(request, 'socialnetwork/following_feed.html', context)
 
 
+@login_required
+def follow_or_unfollow(request, username):
+    try:
+        user = User.objects.get(username=username)
+        if request.POST['action'] == 'follow':
+            request.user.userprofile.follows.add(user.userprofile)
+        if request.POST['action'] == 'unfollow':
+            request.user.userprofile.follows.remove(user.userprofile)
+    except ObjectDoesNotExist:
+        pass
+    return render_user(request, username)
+
+
+@login_required
 def following(request):
     return render_following(request)
 
 
 @login_required
 def profile(request, username):
-    if request.POST:
-        return delete_item(request, username)
+    if request.POST and 'action' in request.POST:
+        if request.POST['action'] == 'delete':
+            return delete_item(request, username)
+        return follow_or_unfollow(request, username)
     else:
         return render_user(request, username)
 
+
 @login_required
-def home(request):        
+def home(request):
     if request.POST:
         return add_item(request)
     else:
-        return render_global(request)
+        return render_global(request, ItemForm())
 
 
 @login_required
 @transaction.atomic
-def add_item(request):
-    errors = []
-    # Creates a new item if it is present as a parameter in the request
-    if not 'item' in request.POST or not request.POST['item']:
-        errors.append('You must enter an item to add.')
-    else:
-        if len(request.POST['item']) > CHARLIMIT:
-            errors.append('Item cannot be longer than {} characters' % CHARLIMIT)
+def edit(request):
+    context = {}
+    if request.method == 'GET':
+        context["form"] = ProfileForm(instance = request.user.userprofile)
+        return render(request, 'socialnetwork/update_profile.html', context)
+    form = ProfileForm(request.POST, request.FILES)
+    if form.is_valid():
+        request.user.userprofile.bio = form.cleaned_data['bio']
+        request.user.userprofile.first = form.cleaned_data['first']
+        request.user.userprofile.last = form.cleaned_data['last']
+        request.user.userprofile.age = form.cleaned_data['age']
+        #only update an existing image to no image if the clear image checkbox is checked
+        if request.user.userprofile.image:
+            if form.cleaned_data['imageupdate']:
+                request.user.userprofile.image = form.cleaned_data['image']
         else:
-            new_item = Item(text=request.POST['item'], user=request.user)
-            new_item.save()
-    return render_global(request)
+            request.user.userprofile.image = form.cleaned_data['image']
+        request.user.userprofile.save()
+    context["form"] = form
+    return render(request, 'socialnetwork/update_profile.html', context)
+
+def get_image(request, username):
+    try:
+        viewing = User.objects.get(username=username)
+        if not viewing.userprofile.image:
+            raise Http404
+        #saving the mime type is clearly overrated
+        url = urllib.pathname2url(viewing.userprofile.image.name)
+        content_type = mimetypes.guess_type(url)
+        return HttpResponse(viewing.userprofile.image, content_type=content_type)
+    except ObjectDoesNotExist:
+        return page_not_found(request)
+
+@login_required
+@transaction.atomic
+def add_item(request):
+    form = ItemForm(request.POST)
+    if form.is_valid():
+        new_item = Item(text=form.cleaned_data['text'], user=request.user)
+        new_item.save()
+    return render_global(request, form)
 
 
 @login_required
 @transaction.atomic
 def delete_item(request, username):
-    errors = []
-    if not 'item_id' in request.POST:
-        errors.append("You must specify the item to delete")
-    else:
-        try: # Deletes item if the logged-in user has an item matching the id
+    if 'item_id' in request.POST:
+        try:  # Deletes item if the logged-in user has an item matching the id
             item_id = request.POST['item_id']
             item_to_delete = Item.objects.get(id=item_id, user=request.user)
             item_to_delete.delete()
         except ObjectDoesNotExist:
-            errors.append('You have not posted this item')
-
+            #this form was generated by me. If the item was already deleted
+            #then we did what they wanted. If it did not exist, then they
+            #mucked around with forms
+            pass
     return render_user(request, username)
-
-
-def validate_registration(request, context):
-    errors = []
-    context['errors'] = errors
-    # Checks the validity of the form data
-    if not 'username' in request.POST or not request.POST['username']:
-        errors.append('Username is required.')
-    else:
-        # Save the username in the request context to re-fill the username
-        # field in case the form has errrors
-        valid_usernames = re.compile("^[a-zA-Z0-9_\-\.]*$")
-        if not valid_usernames.match(request.POST['username']):
-            errors.append('Usernames can contain letters (a-z), '+
-                'numbers (0-9), dashes (-), underscores (_) and periods (.)')
-        else:
-            context['username'] = request.POST['username']
-    if not 'first' in request.POST or not request.POST['first']:
-        errors.append('First name is required.')
-    else:
-        # Save the first in the request context to re-fill the first
-        # field in case the form has errrors
-        context['first'] = request.POST['first']
-    if not 'last' in request.POST or not request.POST['last']:
-        errors.append('Last name is required.')
-    else:
-        # Save the last in the request context to re-fill the last
-        # field in case the form has errrors
-        context['last'] = request.POST['last']
-
-    if not 'password1' in request.POST or not request.POST['password1']:
-        errors.append('Password is required.')
-    if not 'password2' in request.POST or not request.POST['password2']:
-        errors.append('Confirm password is required.')
-
-    if 'password1' in request.POST and 'password2' in request.POST \
-            and request.POST['password1'] and request.POST['password2'] \
-            and request.POST['password1'] != request.POST['password2']:
-        errors.append('Passwords did not match.')
-    return errors
 
 
 @transaction.atomic
 def register(request):
     context = {}
-
     # Just display the registration form if this is a GET request
     if request.method == 'GET':
+        context['form'] = RegisterForm()
         return render(request, 'socialnetwork/register.html', context)
-
-    # Ensure that the information given in the form was valid
-    errors = validate_registration(request, context)
-    
-    # Check that the username is not already taken
-    if len(User.objects.filter(username=request.POST['username'])) > 0:
-        errors.append('Username is already taken.')
-
-    if errors:
+    form = RegisterForm(request.POST)
+    if not form.is_valid():
+        context['form'] = form
         return render(request, 'socialnetwork/register.html', context)
-
-    # Creates the new user from the valid form data
-    new_user = User.objects.create_user(username=request.POST['username'],
-                                        password=request.POST['password1'])
-    new_user.first_name = request.POST['first']
-    new_user.last_name  = request.POST['last']
-    new_user.save()
-
-    # Logs in the new user and redirects to his/her todo list
-    new_user = authenticate(username=request.POST['username'],
-                            password=request.POST['password1'])
-    login(request, new_user)
-    return redirect('/')
+    else:
+        username = form.cleaned_data['username']
+        password = form.cleaned_data['password']
+        new_user = User.objects.create_user(
+            username=username, password=password)
+        UserProfile.objects.create(
+            userkey=new_user,
+            first=form.cleaned_data['first_name'],
+            last=form.cleaned_data['last_name'],
+            bio='',
+        )
+        new_user = authenticate(username=username, password=password)
+        login(request, new_user)
+        return redirect('/')
