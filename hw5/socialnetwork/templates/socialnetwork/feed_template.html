@@ -26,11 +26,10 @@
       <div class="blog-masthead">
         <div class="container">
           {% block nav %}
-          <a class="blog-nav-item" href="/">The Social Network</a>
-          <a class="blog-nav-item" href="/following">Following</a>
-          <a class="blog-nav-item" href="/profile/{{user.username}}">Profile</a>
-          <a class="blog-nav-item" href="#">About</a>
-          <a class="blog-nav-item" href="/logout">Logout</a>
+            <a class="blog-nav-item" href="{% url 'socialnetwork.views.home' %}">The Social Network</a>
+            <a class="blog-nav-item" href="{% url 'socialnetwork.views.following' %}">Following</a>
+            <a class="blog-nav-item" href="{% url 'socialnetwork.views.profile' user.username %}">Profile</a>
+            <a class="blog-nav-item" href="{% url 'django.contrib.auth.views.logout_then_login' %}">Logout</a>
           {% endblock %}
         </div>
       </div>
@@ -74,7 +73,7 @@
             <h4>Logged in as: {{user.username}}</h4>
             <br>
             <p>
-              Name: {{user.first_name}} {{user.last_name}}<br>
+              Name: {{user.userprofile.first}} {{user.userprofile.last}}<br>
               The global feed has {{global_posts}} posts.<br>
               You have made {{user_posts}} posts. 
             </p>
