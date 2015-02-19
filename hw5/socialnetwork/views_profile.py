@@ -104,7 +104,7 @@ def edit(request):
         request.user.userprofile.age = form.cleaned_data['age']
         # only update an existing image to no image if the clear image checkbox
         # is checked
-        if request.user.userprofile.image:
+        if not form.cleaned_data['image']:
             if form.cleaned_data['imageupdate']:
                 request.user.userprofile.image = form.cleaned_data['image']
         else:
