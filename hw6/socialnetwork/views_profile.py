@@ -42,6 +42,7 @@ def render_user(request, username):
     context['global_posts'] = len(Post.objects.all())
     context['user_posts'] = len(Post.objects.filter(user=request.user))
     context['viewing_posts'] = len(Post.objects.filter(user=viewing))
+    context['cform'] = CommentForm()
     return render(request, 'socialnetwork/profile_feed.html', context)
 
 
