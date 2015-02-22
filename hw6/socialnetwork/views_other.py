@@ -76,7 +76,6 @@ def home_feed(request):
         top = items[0].id
         index = 0
         for i, item in enumerate(items):
-            print "id ", item.id, "value ", value
             if int(item.id) == int(value):
                 index = i
                 break
@@ -87,6 +86,7 @@ def home_feed(request):
         response = {"html":feed,"last": top}
         jsond = json.dumps(response)
         return HttpResponse(jsond, content_type='application/json')
+    return page_not_found(request)
 
 
 def comment(request, item_id):
@@ -99,15 +99,8 @@ def comment(request, item_id):
             post = Post.objects.get(id=item_id)
             post.comments.add(comment)
             post.save()
-            print "happy"
             return render(request, 'socialnetwork/comments.html', {"item":post})
-        else:
-            return page_not_found(request)
-
-    return HttpResponse(
-        "{}",
-        content_type="application/json"
-    )
+    return page_not_found(request)
 
 @login_required
 @transaction.atomic
