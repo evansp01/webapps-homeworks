@@ -1,4 +1,5 @@
 {% extends "socialnetwork/feed_template.html" %}
+{% load static %}
 
 {% block title %}
   The Social Network
@@ -30,13 +31,7 @@
   <br>
 {% endblock %}
 
-{% block sidebar %}
+{% block scriptblock %}
+<script src="{% static 'socialnetwork/js/refresh.js' %}"></script>
 {% endblock %}
-
-{% comment %}
-
-{% block login_info %}
-{% endblock %}
-
-{% endcomment %}
 
