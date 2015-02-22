@@ -7,7 +7,9 @@ urlpatterns = patterns('socialnetwork.views',
     url(r'^following$', 'following'),
     url(r'^profile/(?P<username>[a-zA-Z0-9_\-\.]*)$','profile'),
     url(r'^profile/(?P<username>[a-zA-Z0-9_\-\.]*)/image$','get_image'),
+    url(r'^comment/(?P<item_id>\d*)$', 'comment'),
     url(r'^editprofile$','edit'),
+    url(r'^feed/home$','home_feed'),
 )
 
 urlpatterns += patterns('',
