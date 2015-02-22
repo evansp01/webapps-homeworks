@@ -1,0 +1,13 @@
+{% for comment in item.comments.all %}
+  <li>
+    <blockquote>
+      <p> {{comment}} </p>
+      <footer>
+        Posted by
+        <a href="{% url 'socialnetwork.views.profile' comment.user.username %}">
+          {{comment.user.username}}
+        </a> on {{comment.date}}  
+      </footer>
+    </blockquote>
+  </li>
+{% endfor %}
