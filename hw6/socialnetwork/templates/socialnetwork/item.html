@@ -3,6 +3,7 @@
     <blockquote>
       <p>{{item}}</p>
       <footer>
+          <img src="{% url 'socialnetwork.views.get_image' item.user.username %}" alt="item.user.username" height="20" width="20">
           Posted by  
           <a href="{% url 'socialnetwork.views.profile' item.user.username %}">
             {{item.user.username}}
