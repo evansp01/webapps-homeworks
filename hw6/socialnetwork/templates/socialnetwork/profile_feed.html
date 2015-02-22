@@ -1,0 +1,84 @@
+{% extends "socialnetwork/feed_template.html" %}
+
+{% block title %}
+  {{viewing.username}}&#8217;s profile
+{% endblock %}
+
+{% block nav %}
+  <a class="blog-nav-item" href="{% url 'socialnetwork.views.home' %}">The Social Network</a>
+  <a class="blog-nav-item" href="{% url 'socialnetwork.views.following' %}">Following</a>
+  <a class="blog-nav-item active" href="{% url 'socialnetwork.views.profile' user.username %}">Profile</a>
+  <a class="blog-nav-item" href="{% url 'django.contrib.auth.views.logout_then_login' %}">Logout</a>
+{% endblock %}
+
+{% block page_header %}
+  <h` class="blog-title">
+      
+      {% if viewing == user %}
+      <img src="{% url 'socialnetwork.views.get_image' viewing.username %}" alt="Profile Picture" height="42" width="42">
+      &nbsp;{{viewing.username}}&#8217;s profile <small class="small"><a href="{% url 'socialnetwork.views.edit'%}">(edit)</a></small>
+      {% else%}
+        <form method="POST">{% csrf_token %}
+
+          {% if viewing.userprofile in following %}
+          <input type="hidden" name="action" value="unfollow">
+          <img src="{% url 'socialnetwork.views.get_image' viewing.username %}" alt="Profile Picture" height="42" width="42">
+          &nbsp;{{viewing.username}}&#8217;s profile <small><input type="submit" value="(unfollow)" class="btn-link"/></small>
+          {% else %}
+          <input type="hidden" name="action" value="follow">
+          <img src="{% url 'socialnetwork.views.get_image' viewing.username %}" alt="Profile Picture" height="42" width="42">
+          &nbsp;{{viewing.username}}&#8217;s profile <small><input type="submit" value="(follow)" class="btn-link"/></small> 
+          {% endif %}
+      {% endif %}
+
+  </h1>
+  <p class="lead blog-description">
+    Learn about the mundane activites of {{viewing.username}}
+  </p>
+{% endblock %}
+
+{% block form %}
+{% endblock %}
+
+{% block item %}
+  {% if viewing == user %}
+    <form method="POST">{% csrf_token %}
+      <input type="hidden" name="action" value="delete">
+      <input type="hidden" name="item_id" value="{{item.id}}">
+        <li>
+        {{item}} <small><input type="submit" value="(delete)" class="btn-link"/></small> 
+        </li>   
+    </form>     
+  {% else %}
+    <li>
+      {{item}} 
+    </li> 
+  {% endif %}   
+{% endblock %}
+
+{% block item_by %}
+  &mdash;Posted on {{item.date}} 
+{% endblock %}
+
+
+
+{% block sidebar %}
+  <div class="sidebar-module sidebar-module-inset">
+    <h4>
+      Viewing User: {{viewing.username}}
+    </h4>
+    <ul class="list-unstyled notugly">
+    <li> <b>Name:</b> {{viewing.userprofile.first}} {{viewing.userprofile.last}} </li>
+    <li> <b>Age:</b> {% if viewing.userprofile.age %} {{viewing.userprofile.age}} {%endif %} </li>
+    <li> <b>Bio:</b> {{viewing.userprofile.bio}}</li>
+    </ul>
+    <p> User {{viewing.username}} has made {{viewing_posts}} posts. </p>
+  </div>
+{% endblock %}
+
+{% comment %}
+{% block login_info %}
+{% endblock %}
+
+{% endcomment %}
+
