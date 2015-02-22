@@ -10,6 +10,12 @@ class PostForm(forms.ModelForm):
         model = Post
         fields = ['text']
 
+class CommentForm(forms.ModelForm):
+    
+    class Meta:
+        model = Comment
+        fields = ['text']
+
 
 class ProfileForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
