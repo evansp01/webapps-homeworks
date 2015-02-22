@@ -41,19 +41,9 @@
 {% endblock %}
 
 {% block item %}
-  {% if viewing == user %}
-    <form method="POST">{% csrf_token %}
-      <input type="hidden" name="action" value="delete">
-      <input type="hidden" name="item_id" value="{{item.id}}">
-        <li>
-        {{item}} <small><input type="submit" value="(delete)" class="btn-link"/></small> 
-        </li>   
-    </form>     
-  {% else %}
-    <li>
-      {{item}} 
-    </li> 
-  {% endif %}   
+  <li>
+    {{item}}
+  </li>
 {% endblock %}
 
 {% block item_by %}
