@@ -20,22 +20,6 @@
   </p>
 {% endblock %}
 
-{% block form %}
-{% endblock %}
-
-{% block item %}
-    <li>
-      {{item}} 
-    </li> 
-{% endblock %}
-
-{% block item_by %}
-  &mdash;Posted by  
-  <a href="{% url 'socialnetwork.views.profile' item.user.username %}">
-    {{item.user.username}}
-  </a> on {{item.date}}
-{% endblock %}
-
 {% block sidebar %}
   <div class="sidebar-module sidebar-module-inset">
     <h4>
