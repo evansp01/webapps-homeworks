@@ -1,0 +1,11 @@
+*.log
+*.pot
+*.pyc
+pictures/*
+
+# Editor backup files
+*~
+*#
+
+# Django's SQL Lite Database File
+db.sqlite3

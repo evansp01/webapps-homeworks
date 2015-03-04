@@ -1,0 +1,24 @@
+{% for item in items %}
+  <li>
+    <blockquote>
+      <p>{{item}}</p>
+      <footer>
+          <img src="{% url 'socialnetwork.views.get_image' item.user.username %}" alt="item.user.username" height="20" width="20">
+          Posted by  
+          <a href="{% url 'socialnetwork.views.profile' item.user.username %}">
+            {{item.user.username}}
+          </a> on {{item.date}}    
+      </footer>
+      <hr>
+      <ul class="list-unstyled">
+        {% include "socialnetwork/comments.html" %}
+      </ul>
+      <form method="post" action="{% url 'socialnetwork.views.comment' item.id %}"> {% csrf_token %}
+        {{cform.non_field_errors}}
+        {{cform.text.errors}}
+        <input name="{{cform.text.html_name}}" type="text" class="form-control" placeholder="Leave a Comment!" required>
+        <button type="submit" class="btn btn-default btn-tiny">Submit</button>
+      </form>
+    </blockquote>
+  </li>
+{% endfor %}  

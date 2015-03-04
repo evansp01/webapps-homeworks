@@ -1,0 +1,46 @@
+{% extends "socialnetwork/feed_template.html" %}
+
+{% block title %}
+  Your Following Feed
+{% endblock %}
+
+{% block nav %}
+  <a class="blog-nav-item" href="{% url 'socialnetwork.views.home' %}">The Social Network</a>
+  <a class="blog-nav-item active" href="{% url 'socialnetwork.views.following' %}">Following</a>
+  <a class="blog-nav-item" href="{% url 'socialnetwork.views.profile' user.username %}">Profile</a>
+  <a class="blog-nav-item" href="{% url 'django.contrib.auth.views.logout_then_login' %}">Logout</a>
+{% endblock %}
+
+{% block page_header %}
+  <h` class="blog-title">
+    Following Feed
+  </h1>
+  <p class="lead blog-description">
+    Learn about the mundane activites of people you may know!
+  </p>
+{% endblock %}
+
+{% block sidebar %}
+  <div class="sidebar-module sidebar-module-inset">
+    <h4>
+      You Are Following:
+    </h4>
+    {% if following %}
+      <ul class="list-unstyled notugly">
+      {% for userprofile in following %}
+        <li> &mdash;{{userprofile.userkey.username}} </li>
+      {% endfor %}
+      </ul>
+    {% else %}
+      <p> Nobody! </p>
+    {%endif %}
+    <br>
+  </div>
+{% endblock %}
+
+{% comment %}
+{% block login_info %}
+{% endblock %}
+
+{% endcomment %}
+
