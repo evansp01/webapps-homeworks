@@ -16,7 +16,7 @@
       <form method="post" action="{% url 'socialnetwork.views.comment' item.id %}"> {% csrf_token %}
         {{cform.non_field_errors}}
         {{cform.text.errors}}
-        <input name="{{cform.text.html_name}}" type="text" class="form-control" placeholder="Leave a Comment!" required>
+        <input name="{{cform.text.html_name}}" type="text" class="form-control" placeholder="Leave a Comment!">
         <button type="submit" class="btn btn-default btn-tiny">Submit</button>
       </form>
     </blockquote>
