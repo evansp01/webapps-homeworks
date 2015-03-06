@@ -112,28 +112,3 @@ def add_item(request):
     return render_global(request, form)
 
 
-@transaction.atomic
-def register(request):
-    context = {}
-    # Just display the registration form if this is a GET request
-    if request.method == 'GET':
-        context['form'] = RegisterForm()
-        return render(request, 'socialnetwork/register.html', context)
-    form = RegisterForm(request.POST)
-    if not form.is_valid():
-        context['form'] = form
-        return render(request, 'socialnetwork/register.html', context)
-    else:
-        username = form.cleaned_data['username']
-        password = form.cleaned_data['password']
-        new_user = User.objects.create_user(
-            username=username, password=password)
-        UserProfile.objects.create(
-            userkey=new_user,
-            first=form.cleaned_data['first_name'],
-            last=form.cleaned_data['last_name'],
-            bio='',
-        )
-        new_user = authenticate(username=username, password=password)
-        login(request, new_user)
-        return redirect('/')
