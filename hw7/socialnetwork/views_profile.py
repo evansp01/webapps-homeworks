@@ -1,6 +1,6 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.core.exceptions import ObjectDoesNotExist
-
+from django.conf import settings
 # Decorator to use built-in authentication system
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, Http404
@@ -11,6 +11,7 @@ from django.contrib.auth import login, authenticate
 from django.views.defaults import page_not_found
 import mimetypes
 import urllib
+import os
 
 # Django transaction system so we can use @transaction.atomic
 from django.db import transaction
@@ -47,23 +48,28 @@ def render_user(request, username):
 
 
 def get_image(request, username):
-    try:
-        viewing = User.objects.get(username=username)
-        if not viewing.userprofile.image:
-            raise Http404
-        # saving the mime type is clearly overrated
-        url = urllib.pathname2url(viewing.userprofile.image.name)
-        content_type = mimetypes.guess_type(url)
-        return HttpResponse(viewing.userprofile.image, content_type=content_type)
-    except ObjectDoesNotExist:
-        return page_not_found(request)
+    viewing = get_object_or_404(User, username=username)
+    if not viewing.userprofile.image:
+        image_location = 'pictures/default/default.jpg'
+        full_path = os.path.join(settings.MEDIA_ROOT, 'default.jpg')
+        #print full_path
+        with open(full_path, "rb") as f:
+            return HttpResponse(f.read(), content_type="image/jpeg")
+        #return HttpResponse(image, content_type=content_type)
+    
+    # saving the mime type is clearly overrated
+    image_location = viewing.userprofile.image
+    url = urllib.pathname2url(image_location.name)
+    content_type = mimetypes.guess_type(url)
+    return HttpResponse(viewing.userprofile.image, content_type=content_type)
+
 
 
 @login_required
 def follow_or_unfollow(request, username):
     try:
         user = User.objects.get(username=username)
-        form = FollowForm(request)
+        form = FollowForm(request.POST)
         if form.is_valid():
             action = form.cleaned_data['action']
             if action == 'follow':
@@ -74,15 +80,29 @@ def follow_or_unfollow(request, username):
         pass
     return render_user(request, username)
 
+@login_required
+@transaction.atomic
+def update_image(request, form):
+    new_image = form.cleaned_data['image'] or form.cleaned_data['imageupdate']
+    if new_image:
+        if request.user.userprofile.image:
+            try:
+                file_name = os.path.join(settings.MEDIA_ROOT, request.user.userprofile.image.name)
+                os.remove(file_name)
+            except OSError:
+                pass
+        request.user.userprofile.image = form.cleaned_data['image']
+
 
 @login_required
 @transaction.atomic
 def edit(request):
     context = {}
     if request.method == 'GET':
-        current_form = ProfileForm(instance=request.user.userprofile)
-        current_form.first = request.user.first_name
-        current_form.last = request.user.last_name
+        current_form = ProfileForm(
+            instance=request.user.userprofile, 
+            initial={'first':request.user.first_name, 'last':request.user.last_name}
+        )
         context["form"] = current_form
         return render(request, 'socialnetwork/update_profile.html', context)
     form = ProfileForm(request.POST, request.FILES)
@@ -93,11 +113,7 @@ def edit(request):
         request.user.userprofile.age = form.cleaned_data['age']
         # only update an existing image to no image if the clear image checkbox
         # is checked
-        if not form.cleaned_data['image']:
-            if form.cleaned_data['imageupdate']:
-                request.user.userprofile.image = form.cleaned_data['image']
-        else:
-            request.user.userprofile.image = form.cleaned_data['image']
+        update_image(request, form)
         request.user.userprofile.save()
         request.user.save()
     context["form"] = form
