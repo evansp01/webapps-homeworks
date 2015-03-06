@@ -10,6 +10,7 @@ urlpatterns = patterns('socialnetwork.views',
     url(r'^comment/(?P<item_id>\d*)$', 'comment'),
     url(r'^editprofile$','edit'),
     url(r'^feed/home$','home_feed'),
+    url(r'^confirm/(?P<username>[a-zA-Z0-9_\-\.]*)/(?P<token>[a-z0-9\-]+)$','confirm'),
 )
 
 urlpatterns += patterns('',
