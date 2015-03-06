@@ -21,7 +21,7 @@ from socialnetwork.forms import *
 
 @login_required
 def profile(request, username):
-    if request.POST and 'action' in request.POST:
+    if request.POST:
         return follow_or_unfollow(request, username)
     else:
         return render_user(request, username)
@@ -63,10 +63,13 @@ def get_image(request, username):
 def follow_or_unfollow(request, username):
     try:
         user = User.objects.get(username=username)
-        if request.POST['action'] == 'follow':
-            request.user.userprofile.follows.add(user.userprofile)
-        if request.POST['action'] == 'unfollow':
-            request.user.userprofile.follows.remove(user.userprofile)
+        form = FollowForm(request)
+        if form.is_valid():
+            action = form.cleaned_data['action']
+            if action == 'follow':
+                request.user.userprofile.follows.add(user.userprofile)
+            if action == 'unfollow':
+                request.user.userprofile.follows.remove(user.userprofile)
     except ObjectDoesNotExist:
         pass
     return render_user(request, username)
@@ -77,13 +80,16 @@ def follow_or_unfollow(request, username):
 def edit(request):
     context = {}
     if request.method == 'GET':
-        context["form"] = ProfileForm(instance=request.user.userprofile)
+        current_form = ProfileForm(instance=request.user.userprofile)
+        current_form.first = request.user.first_name
+        current_form.last = request.user.last_name
+        context["form"] = current_form
         return render(request, 'socialnetwork/update_profile.html', context)
     form = ProfileForm(request.POST, request.FILES)
     if form.is_valid():
         request.user.userprofile.bio = form.cleaned_data['bio']
-        request.user.userprofile.first = form.cleaned_data['first']
-        request.user.userprofile.last = form.cleaned_data['last']
+        request.user.first_name = form.cleaned_data['first']
+        request.user.last_name = form.cleaned_data['last']
         request.user.userprofile.age = form.cleaned_data['age']
         # only update an existing image to no image if the clear image checkbox
         # is checked
@@ -93,5 +99,6 @@ def edit(request):
         else:
             request.user.userprofile.image = form.cleaned_data['image']
         request.user.userprofile.save()
+        request.user.save()
     context["form"] = form
     return render(request, 'socialnetwork/update_profile.html', context)
