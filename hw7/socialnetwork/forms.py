@@ -16,6 +16,9 @@ class CommentForm(forms.ModelForm):
         model = Comment
         fields = ['text']
 
+class FollowForm(forms.Form):
+    action = forms.CharField()
+
 
 class ProfileForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
@@ -26,9 +29,24 @@ class ProfileForm(forms.ModelForm):
 
     imageupdate = forms.BooleanField(required=False)
 
+    first = forms.RegexField(
+        label="First Name",
+        max_length=30,
+        regex=r'^[a-zA-Z0-9_\-\.]+$',
+        error_messages={'invalid':
+                        "This value may contain only letters, numbers periods dashes and underscores."}
+    )
+    last = forms.RegexField(
+        label="Last Name",
+        max_length=30,
+        regex=r'^[a-zA-Z0-9_\-\.]+$',
+        error_messages={'invalid':
+                        "This value may contain only letters, numbers periods dashes and underscores."}
+    )
+    
     class Meta:
         model = UserProfile
-        fields = ['first', 'last', 'age', 'bio', 'image']
+        fields = ['age', 'bio', 'image']
 
     def clean_image(self):
         image = self.cleaned_data.get('image', False)
@@ -68,7 +86,7 @@ class RegisterForm(forms.ModelForm):
                                 widget=forms.PasswordInput)
     class Meta:
         model = User
-        fields = ['username', 'first_name', 'last_name', 'password']
+        fields = ['first_name', 'last_name', 'email', 'username', 'password']
 
     def clean_password2(self):
         confirm_password = self.cleaned_data.get('password2')
