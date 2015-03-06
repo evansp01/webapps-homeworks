@@ -1,7 +1,7 @@
 *.log
 *.pot
 *.pyc
-pictures/*
+media/pictures/*
 
 # Editor backup files
 *~
