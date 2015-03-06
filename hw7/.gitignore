@@ -2,6 +2,7 @@
 *.pot
 *.pyc
 media/pictures/*
+config.ini
 
 # Editor backup files
 *~
