@@ -20,15 +20,9 @@ class Comment(models.Model):
         return self.text
 
 
-
-def get_image_path(instance, filename):
-    return os.path.join('photos', str(instance.id), filename)
-
 class UserProfile(models.Model):
     userkey = models.OneToOneField(User)
-    first = models.CharField(max_length=50)
-    last = models.CharField(max_length=50)
-    age = models.IntegerField(null=True)
+    age = models.PositiveIntegerField(null=True)
     bio = models.CharField(max_length=430, blank=True)
     image = models.ImageField(upload_to="pictures", blank=True)
     follows = models.ManyToManyField('self', related_name='followers', symmetrical=False)
