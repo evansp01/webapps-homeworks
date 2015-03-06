@@ -1,0 +1,11 @@
+{% extends "socialnetwork/form_template.html" %}
+{% load static %}
+
+{% block title %}Registration Complete!{% endblock %}
+
+{% block form %}
+<img class="profile-img" src="{% static 'socialnetwork/img/homepage.jpg' %}" alt="">
+<h2 class="text-center"> Registration Complete! </h2>
+<p class="text-center"> Congratulations {{user}} your registration is complete</p>
+<p class="text-center"><a href="{%url 'django.contrib.auth.views.login' %}">Click here to login</a></p>
+{% endblock %}

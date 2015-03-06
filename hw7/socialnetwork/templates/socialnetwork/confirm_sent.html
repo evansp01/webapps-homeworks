@@ -1,0 +1,10 @@
+{% extends "socialnetwork/form_template.html" %}
+{% load static %}
+
+{% block title %}Please Confirm Your Account{% endblock %}
+
+{% block form %}
+<img class="profile-img" src="{% static 'socialnetwork/img/homepage.jpg' %}" alt="">
+<h2 class="text-center"> Confirmation Sent </h2>
+<p class="text-center"> A confirmation email has been sent to {{confirm}}. Open the email and click the link to complete registration. <p>
+{% endblock %}
