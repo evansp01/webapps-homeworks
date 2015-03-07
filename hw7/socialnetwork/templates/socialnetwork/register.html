@@ -9,7 +9,10 @@
   {{form.non_field_errors}}
   {% for field in form %}
     {{ field.errors }}
-    <input name="{{field.html_name}}" type="{{field.field.widget.input_type}}" class="form-control" placeholder="{{field.label}}" value="{{field.value}}" required>
+    <input name="{{field.html_name}}" type="{{field.field.widget.input_type}}" class="form-control" placeholder="{{field.label}}" 
+    {% if field.value %}
+    value="{{field.value}}" 
+    {% endif %} required>
   {% endfor %}
   <input type="submit" class="btn btn-lg btn-primary btn-block btn-default" value="Register" />
 </form>
