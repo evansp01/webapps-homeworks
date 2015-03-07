@@ -111,7 +111,7 @@ EMAIL_HOST = config.get('Email', 'Host')
 EMAIL_PORT = config.get('Email', 'Port')
 EMAIL_HOST_USER = config.get('Email', 'User')
 EMAIL_HOST_PASSWORD = config.get('Email', 'Password')
-EMAIL_USE_SSL = True
+EMAIL_USE_TLS = True
 
 print 'EMAIL_HOST',EMAIL_HOST+':'+str(EMAIL_PORT)
 print 'EMAIL_HOST_USER',EMAIL_HOST_USER
