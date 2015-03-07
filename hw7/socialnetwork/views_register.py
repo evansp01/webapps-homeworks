@@ -32,8 +32,10 @@ def register(request):
     if request.method == 'GET':
         context['form'] = RegisterForm()
         return render(request, 'socialnetwork/register.html', context)
-    form = RegisterForm(request.POST)
+    form = RegisterForm(request.POST.copy())
     if not form.is_valid():
+        form.data['password'] = None
+        form.data['password2'] = None
         context['form'] = form
         return render(request, 'socialnetwork/register.html', context)
     #everything is okay, register
@@ -115,7 +117,7 @@ def send_email(new_user, request):
     send_mail(subject="Verify your email address",
               html_message=email_html,
               message= email_text,
-              from_email="yolo@cmu.edu",
+              from_email="networkthesocial@gmail",
               recipient_list=[new_user.email])
     context = {}
     context['confirm'] = new_user.email
