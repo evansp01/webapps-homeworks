@@ -1,6 +1,7 @@
 *.log
 *.pot
 *.pyc
+webapps.pem
 media/pictures/*
 config.ini
 
