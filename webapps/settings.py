@@ -10,16 +10,19 @@ https://docs.djangoproject.com/en/1.7/ref/settings/
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
-import ConfigParser
+import private_settings
+
+
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.7/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '9hi%uk&)00f34wv-4)m5nbrf6m@d0f3_u1&$xit@faad&nfsem'
+SECRET_KEY = private_settings.SECRET_KEY 
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -104,14 +107,10 @@ STATIC_URL = '/static/'
 # To enable real email-sending, you should uncomment and 
 # configure the settings below.
 
-config = ConfigParser.ConfigParser()
-config.read("config.ini")
 
-EMAIL_HOST = config.get('Email', 'Host')
-EMAIL_PORT = config.get('Email', 'Port')
-EMAIL_HOST_USER = config.get('Email', 'User')
-EMAIL_HOST_PASSWORD = config.get('Email', 'Password')
+EMAIL_HOST = private_settings.EMAIL_HOST
+EMAIL_PORT = private_settings.EMAIL_PORT
+EMAIL_HOST_USER = private_settings.EMAIL_USER
+EMAIL_HOST_PASSWORD = private_settings.EMAIL_PASS
 EMAIL_USE_TLS = True
 
-print 'EMAIL_HOST',EMAIL_HOST+':'+str(EMAIL_PORT)
-print 'EMAIL_HOST_USER',EMAIL_HOST_USER
