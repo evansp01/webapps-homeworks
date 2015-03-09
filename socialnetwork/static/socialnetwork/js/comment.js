@@ -1,6 +1,5 @@
 $( "#post_list" ).on( "submit", "form", function( event ) {
   event.preventDefault();
-  console.log($(this).serialize());
   thisForm = $(this);
   $.ajax({
     url: $(this).attr("action"),
@@ -14,9 +13,5 @@ $( "#post_list" ).on( "submit", "form", function( event ) {
       myNode.html(data);
 
     },
-    error: function (xhr, ajaxOptions, thrownError) {
-      console.log(xhr.status);
-      console.log(thrownError);
-    }
   });
 });
