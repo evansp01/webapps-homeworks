@@ -1,3 +1,4 @@
+*.pyc
 django-venv
 virtenv.sh
 README.md
