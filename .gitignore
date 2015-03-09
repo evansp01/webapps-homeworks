@@ -5,4 +5,5 @@ README.md
 config.ini
 db.sqlite3
 media/*
+static/*
 webapps.pem
