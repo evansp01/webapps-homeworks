@@ -3,6 +3,5 @@ virtenv.sh
 README.md
 config.ini
 db.sqlite3
-manage.py
 media/*
 webapps.pem
