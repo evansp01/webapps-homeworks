@@ -16,8 +16,8 @@ import private_settings
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
 
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+MEDIA_ROOT = '/var/www/media' 
+STATIC_ROOT = '/var/www/static'
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.7/howto/deployment/checklist/
 
