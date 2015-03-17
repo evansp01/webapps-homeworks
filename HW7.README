@@ -1,0 +1,9 @@
+My code, configured to run on ec2 is on the branch ec2 
+The code in the folder hw7 on branch master is a copy which can be run on localhost
+You can view the site at ec2-52-0-202-159.compute-1.amazonaws.com
+
+The site uses:
+    Apache with mod wsgi
+       Configured to serve static files
+    Postgresql
+    
